@@ -9,12 +9,11 @@ on:
 
 jobs:
   android-build:
-
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64, arm, aarch64]
+        arch: [arm, aarch64]
 
     steps:
     - uses: actions/checkout@v4
@@ -30,3 +29,9 @@ jobs:
         make -f Makefile.Android.${{ matrix.arch }}
         . venv/bin/ngli-activate
         meson test -C builddir/Android/${{ matrix.arch }}/libnopegl
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: libnopegl-${{ matrix.arch }}
+        path: builddir/Android/${{ matrix.arch }}
